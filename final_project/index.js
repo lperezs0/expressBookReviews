@@ -36,47 +36,7 @@ app.use("/customer/auth/*", function auth(req,res,next){
     }
 });
 
-//login endpoint
-app.post("/login", (req, res) =>{
-    const username = req.body.username;
-    const password = req.body.password;
 
-//check if user name and password are missing before clicking login
-    if (!username || !password){
-        return res.status(404).json({message: "Error loggin in"});
-    }
-
-    if (authenticatedUser(username,password)) {
-        let accessToken = jwt.sign({
-            data: password
-        }, 'access', { expiresIn: 60}
-        )
-        req.session.authorization = {
-            accessToken, username
-        }
-        return res.status(200).send("User successfully logged in");
-    } else {
-        return res.status(208).json({message: "Invalid login. Check username and password and try again"})
-    }
-});
-
-//register a new user
-app.post("/register", (req, res) => {
-    const username = req.body.username;
-    const password = req.body.password;
-
-    if (username && password) {
-        if(!doesExist(username)){
-            user.push({"username": username, "password": password});
-            return res.status(200).json({message: "User successfully registered, Now you can login"})
-        }
-        else{
-            return res.status(404).json({message: "Username not available, try a different one!"});
-        }
-        
-    }
-    return res.status(404).json({message: "Unable to register user."});
-});
  
 const PORT =5000;
 
